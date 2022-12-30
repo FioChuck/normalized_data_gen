@@ -1,16 +1,20 @@
 # TLl;DR
 
-A simple Scala Spark application that generates random mock data with a normal distribution. Next the data is written to BigQuery using the Apache Spark SQL connector for Google BigQuery. See connector details [here](https://github.com/GoogleCloudDataproc/spark-bigquery-connector).
+A simple Scala Spark application that generates random mock data with a normal distribution. The resulting mock data is written to BigQuery using the Apache Spark SQL connector for Google BigQuery. See connector details [here](https://github.com/GoogleCloudDataproc/spark-bigquery-connector).
 
 # Setup
 
-This Scala project is designed to be built/deployed as a fat Jar file. A yaml file is included in `.github/workflows/` to automate build and deployment using Github Actions.
+This Scala project is designed to run as a standalone fat Jar. A yaml file in the `.github/workflows/` folder automate the assembly process _(compile and assemble uber Jar)_ using Github Actions and the [sbt](https://www.scala-sbt.org/) build tool. This deployment script requires a single Github repo secret _(listed below)_.
+
+| Action Secret | Value                                                          |
+| ------------- | -------------------------------------------------------------- |
+| GCP_SA_KEY    | Service Account Key used to authenticate GitHub to GCP Project |
 
 # Local Development
 
-When developing locally using Scala metals local credentials must be available for authentication to BigQuery. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the service account key json file. More info [here](https://cloud.google.com/docs/authentication/application-default-credentials).
+When developing locally using [Metals](https://scalameta.org/metals/) or IntelliJ, credentials must be available for authentication to BigQuery. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the service account key json file path. More info [here](https://cloud.google.com/docs/authentication/application-default-credentials).
 
-12/30/2022
+> //TODO switch credential configuration file for workload identity federation.
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/Users/chasf/df-credentials.json
