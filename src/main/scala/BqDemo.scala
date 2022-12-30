@@ -11,7 +11,7 @@ object BqDemo {
 
     val spark = SparkSession.builder
       .appName("Spark Pi")
-      // .config("spark.master", "local")
+      // .config("spark.master", "local[*]")
       .getOrCreate()
 
     val df =
@@ -21,11 +21,19 @@ object BqDemo {
         .load()
         .cache())
 
-    val df2 = df.limit(10)
+    val df2 = df.limit(10).select("display_name")
 
     df2.show()
 
     print("total row count: " + df2.count())
+
+    df2.printSchema()
+
+    df2.write
+      .format("bigquery")
+      .option("writeMethod", "direct")
+      .mode("overwrite")
+      .save("cf-data-analytics.dataproc.strng")
   }
   println("Test Result Number 15")
 
