@@ -30,3 +30,4 @@ jobs:
         with:
           path: "target/scala-2.12/normalized-data-gen-assembly-3.0.jar"
           destination: "cf-spark-jobs"
+          gzip: false
