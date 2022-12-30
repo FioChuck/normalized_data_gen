@@ -20,12 +20,12 @@ jobs:
       - name: build fat jar
         run: sbt assembly
 
-      - name: deploy to gcs
+      - name: authenticate with gcp
         uses: "google-github-actions/auth@v0"
         with:
           credentials_json: ${{secrets.GCP_SA_KEY}}
 
-      - name: deploy to gcs 2
+      - name: deploy fat jar to gcs
         uses: "google-github-actions/upload-cloud-storage@v1"
         with:
           path: "target/scala-2.12"
