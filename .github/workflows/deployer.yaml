@@ -29,4 +29,4 @@ jobs:
         uses: "google-github-actions/upload-cloud-storage@v1"
         with:
           path: "target/scala-2.12/scala template-assembly-3.0.jar"
-          destination: "cf-spark-data/file.jar"
+          destination: "cf-spark-jobs/file.jar"
