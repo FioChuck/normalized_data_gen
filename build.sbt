@@ -1,4 +1,4 @@
-name := "scala template"
+name := "normalized-data-gen"
 organization := "chasf"
 version := "3.0"
 
