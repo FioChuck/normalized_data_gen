@@ -1,4 +1,4 @@
-# TLl;DR
+# TL;DR
 
 A simple Scala Spark application that generates random mock data with a normal distribution. The resulting mock data is written to BigQuery using the Apache Spark SQL connector for Google BigQuery. See connector details [here](https://github.com/GoogleCloudDataproc/spark-bigquery-connector).
 
