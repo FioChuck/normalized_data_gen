@@ -28,14 +28,5 @@ jobs:
       - name: deploy to gcs 2
         uses: "google-github-actions/upload-cloud-storage@v1"
         with:
-          path: ""
+          path: "target/scala-2.12/scala template-assembly-3.0.jar"
           destination: "cf-spark-data/file.jar"
-
-    # steps:
-    #   - uses: actions/checkout@v3
-    #   - name: Set up JDK 1.8
-    #     uses: actions/setup-java@v3
-    #     with:
-    #       java-version: 17
-    #   - name: Build Fat Jar
-    #     run: sbt assembly
