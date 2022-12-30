@@ -18,11 +18,13 @@ When developing locally using [Metals](https://scalameta.org/metals/) or Intelli
 
 > //TODO switch credential configuration file to workload identity federation.
 
+_Ex:_
+
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/Users/chasf/df-credentials.json
 ```
 
-Next the master URL for the cluster must be defined as _local_. Make sure the .config parameters are commented out when deploying to productino.
+Next the master URL for the cluster must be defined as _local_. Make sure the `.config()` parameters are commented out when deploying to production.
 
 _Ex:_
 
@@ -33,7 +35,7 @@ _Ex:_
       .getOrCreate()
 ```
 
-The `local[*]` configuration sets the worker threads equal to the logical cores on your machine. More information here: https://spark.apache.org/docs/latest/submitting-applications.html#master-urls.
+The `local[*]` configuration sets the worker threads equal to the logical cores on your machine. More information [here](https://spark.apache.org/docs/latest/submitting-applications.html#master-urls).
 
 # Reference
 
