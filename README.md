@@ -4,17 +4,19 @@ A simple Scala Spark application that generates random mock data with a normal d
 
 # Setup
 
-This Scala project is designed to run as a standalone fat Jar. A yaml file in the `.github/workflows/` folder automate the assembly process using Github Actions and the [sbt](https://www.scala-sbt.org/) build tool _(compile and assemble uber Jar)_. This deployment script requires a single Github repo secret _(listed below)_.
+This Scala project is designed to run as a standalone fat Jar. A yaml file in the `.github/workflows/` folder automates the assembly process using Github Actions and the [sbt](https://www.scala-sbt.org/) build tool _(compile and assemble uber Jar)_. This deployment script requires a single Github repo secret _(listed below)_. Set this secret prior to deployment.
 
 | Action Secret | Value                                                          |
 | ------------- | -------------------------------------------------------------- |
 | GCP_SA_KEY    | Service Account Key used to authenticate GitHub to GCP Project |
 
+> //TODO switch from Service Account Key JSON authentication to Workload Identity Federation https://github.com/google-github-actions/upload-cloud-storage#via-google-github-actionsauth
+
 # Local Development
 
 When developing locally using [Metals](https://scalameta.org/metals/) or IntelliJ, credentials must be available for authentication to BigQuery. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the service account key json file path. More info [here](https://cloud.google.com/docs/authentication/application-default-credentials).
 
-> //TODO switch credential configuration file for workload identity federation.
+> //TODO switch credential configuration file to workload identity federation.
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/Users/chasf/df-credentials.json
