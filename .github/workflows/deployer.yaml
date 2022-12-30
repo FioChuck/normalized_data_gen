@@ -28,6 +28,6 @@ jobs:
       - name: deploy to gcs 2
         uses: "google-github-actions/upload-cloud-storage@v1"
         with:
-          path: "target/scala-2.12/normalized-data-gen-assembly-3.0.jar"
+          path: "target/scala-2.12/normalized-data-gen-assembly-*.jar"
           destination: "cf-spark-jobs"
           gzip: false
