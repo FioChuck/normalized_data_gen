@@ -4,7 +4,7 @@ A simple Scala Spark application that generates random mock data with a normal d
 
 # Setup
 
-This Scala project is designed to run as a standalone fat Jar. A yaml file in the `.github/workflows/` folder automate the assembly process _(compile and assemble uber Jar)_ using Github Actions and the [sbt](https://www.scala-sbt.org/) build tool. This deployment script requires a single Github repo secret _(listed below)_.
+This Scala project is designed to run as a standalone fat Jar. A yaml file in the `.github/workflows/` folder automate the assembly process using Github Actions and the [sbt](https://www.scala-sbt.org/) build tool _(compile and assemble uber Jar)_. This deployment script requires a single Github repo secret _(listed below)_.
 
 | Action Secret | Value                                                          |
 | ------------- | -------------------------------------------------------------- |
@@ -20,7 +20,9 @@ When developing locally using [Metals](https://scalameta.org/metals/) or Intelli
 export GOOGLE_APPLICATION_CREDENTIALS=/Users/chasf/df-credentials.json
 ```
 
-Next the master URL for the cluster must be defined as _local_. Make sure the .config parameters are commented out when deploying to productino. Ex:
+Next the master URL for the cluster must be defined as _local_. Make sure the .config parameters are commented out when deploying to productino.
+
+_Ex:_
 
 ```scala
  val spark = SparkSession.builder
