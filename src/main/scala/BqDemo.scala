@@ -11,7 +11,7 @@ object BqDemo {
 
     val spark = SparkSession.builder
       .appName("Spark Pi")
-      .config("spark.master", "local")
+      // .config("spark.master", "local")
       .getOrCreate()
 
     val df =
@@ -21,9 +21,11 @@ object BqDemo {
         .load()
         .cache())
 
-    df.show(30)
+    val df2 = df.limit(10)
 
-    print("total row count: " + df.count())
+    df2.show()
+
+    print("total row count: " + df2.count())
   }
   println("Test Result Number 15")
 

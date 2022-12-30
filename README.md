@@ -6,6 +6,23 @@ A simple Scala Spark application that generates random mock data with a normal d
 
 This Scala project is designed to be built/deployed as a fat Jar file. A yaml file is included in `.github/workflows/` to automate build and deployment with Github Actions.
 
+# Local Development
+
+When developing locally using Scala metals local credentials must be available for authentication to BigQuery. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the service account key json file. More info here: https://cloud.google.com/docs/authentication/application-default-credentials.
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/Users/chasf/df-credentials.json
+```
+
+Next the master URL for the cluster must be defined as _local_. Make sure the .config parameters are commented out when deploying to productino. Ex:
+
+```scala
+ val spark = SparkSession.builder
+      .appName("Spark Pi")
+      .config("spark.master", "local") // comment out when deploying
+      .getOrCreate()
+```
+
 # Reference
 
 This application was build using several articles as reference. These sources are listed below.
