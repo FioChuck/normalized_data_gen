@@ -2,9 +2,9 @@ name := "normalized-data-gen"
 organization := "chasf"
 version := "3.0"
 
-scalaVersion := "2.12.15"
+scalaVersion := "2.12.14"
 
-val sparkVersion = "3.3.1"
+val sparkVersion = "3.1.3"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion % Provided,
