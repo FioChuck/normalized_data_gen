@@ -26,7 +26,7 @@ object BqDemo {
       .getOrCreate()
 
     val df = spark.sqlContext
-      .range(0, 1000000001)
+      .range(0, 101)
 
     val df2 = df
       .withColumn("even_distribution", rand(seed = 10))
@@ -43,7 +43,7 @@ object BqDemo {
     //     .load()
     //     .cache())
 
-    df2.printSchema()
+    // df2.printSchema()
 
     df2.write
       .format("bigquery")
