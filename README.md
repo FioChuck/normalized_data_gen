@@ -2,9 +2,13 @@
 
 A simple Scala Spark application that generates random mock data with a normal distribution. The resulting data is written to BigQuery using the Apache Spark connector for Google BigQuery. See connector details [here](https://github.com/GoogleCloudDataproc/spark-bigquery-connector).
 
+This project can also be used as a template for building a Scala Spark CI/CD.
+
 # Setup
 
-This Scala project is designed to run as a standalone fat Jar. A yaml file in the `.github/workflows/` folder automates the assembly process using Github Actions and the [sbt](https://www.scala-sbt.org/) build tool _(compile and assemble uber Jar)_. This deployment script requires a single Github repo secret _(listed below)_. Set this secret prior to deployment.
+This Scala project is designed to run as a standalone fat Jar. A yaml file in the `.github/workflows/` folder automates the assembly process using Github Actions and the [sbt](https://www.scala-sbt.org/) build tool _(compile and assemble uber Jar)_. SBT is a build tool for Scala/Java _(similar to Maven)_.
+
+Github uses a Service Account Key to authenticate with GCP. The yaml script expects this value stored as Github repo secret _(listed below)_. Set this secret prior to deployment.
 
 | Action Secret | Value                                                          |
 | ------------- | -------------------------------------------------------------- |
@@ -14,7 +18,7 @@ This Scala project is designed to run as a standalone fat Jar. A yaml file in th
 
 # Local Development
 
-When developing locally using [Metals](https://scalameta.org/metals/) or IntelliJ, credentials must be available for authentication to BigQuery. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the service account key json file path. More info [here](https://cloud.google.com/docs/authentication/application-default-credentials).
+When developing locally using [Metals](https://scalameta.org/metals/) or IntelliJ, credentials must be available to authentication with BigQuery. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the service account key json file path. More info [here](https://cloud.google.com/docs/authentication/application-default-credentials).
 
 > //TODO switch credential configuration file to workload identity federation.
 
@@ -30,12 +34,38 @@ _Ex:_
 
 ```scala
  val spark = SparkSession.builder
-      .appName("Spark Pi")
+      .appName("Bq Demo")
       .config("spark.master", "local[*]") // comment out when deploying
       .getOrCreate()
 ```
 
 The `local[*]` configuration sets the worker threads equal to the logical cores on your machine. More information [here](https://spark.apache.org/docs/latest/submitting-applications.html#master-urls).
+
+There are two options for writing data BigQuery using the Spark connector Direct Mode and Indirect Mode.
+
+Indirect more relies on the [GCS Spark Connector](https://github.com/GoogleCloudDataproc/hadoop-connectors/tree/master/gcs) which is NOT included with the connector. The Maven package for this connector is available here:
+
+> > // https://mvnrepository.com/artifact/com.google.cloud.bigdataoss/gcs-connector
+> > libraryDependencies += "com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop3-2.2.10"
+
+Several Spark settings are also required when using the GCS connector. Comment these out before deploying to Dataproc _(see below)_. More information on these settings can be found [here](https://github.com/GoogleCloudDataproc/hadoop-connectors/tree/master/gcs).
+
+```scala
+  val spark = SparkSession.builder
+     .appName("Bq Demo")
+     // .config("spark.master", "local[*]")
+     // .config(
+     //   "spark.hadoop.fs.AbstractFileSystem.gs.impl",
+     //   "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"
+     // )
+     // .config("spark.hadoop.fs.gs.project.id", "cf-data-analytics")
+     // .config("spark.hadoop.google.cloud.auth.service.account.enable", "true")
+     // .config(
+     //   "spark.hadoop.google.cloud.auth.service.account.json.keyfile",
+     //   "/Users/chasf/Desktop/cf-data-analytics-1ff73e9e3f7a.json"
+     // )
+     .getOrCreate()
+```
 
 # Reference
 
