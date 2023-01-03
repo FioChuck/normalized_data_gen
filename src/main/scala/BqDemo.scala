@@ -12,17 +12,17 @@ object BqDemo {
 
     val spark = SparkSession.builder
       .appName("Bq Demo")
-      // .config("spark.master", "local[*]")
-      // .config(
-      //   "spark.hadoop.fs.AbstractFileSystem.gs.impl",
-      //   "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"
-      // )
-      // .config("spark.hadoop.fs.gs.project.id", "cf-data-analytics")
-      // .config("spark.hadoop.google.cloud.auth.service.account.enable", "true")
-      // .config(
-      //   "spark.hadoop.google.cloud.auth.service.account.json.keyfile",
-      //   "/Users/chasf/Desktop/cf-data-analytics-1ff73e9e3f7a.json"
-      // )
+      .config("spark.master", "local[*]")
+      .config(
+        "spark.hadoop.fs.AbstractFileSystem.gs.impl",
+        "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"
+      )
+      .config("spark.hadoop.fs.gs.project.id", "cf-data-analytics")
+      .config("spark.hadoop.google.cloud.auth.service.account.enable", "true")
+      .config(
+        "spark.hadoop.google.cloud.auth.service.account.json.keyfile",
+        "/Users/chasf/Desktop/cf-data-analytics-1ff73e9e3f7a.json"
+      )
       .getOrCreate()
 
     val df = spark.sqlContext
