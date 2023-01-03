@@ -11,14 +11,22 @@ object BqDemo {
   def main(args: Array[String]): Unit = {
 
     val spark = SparkSession.builder
-      .appName("Spark Pi")
-      .config("spark.master", "local[*]")
+      .appName("Bq Demo")
+      // .config("spark.master", "local[*]")
+      // .config(
+      //   "spark.hadoop.fs.AbstractFileSystem.gs.impl",
+      //   "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"
+      // )
+      // .config("spark.hadoop.fs.gs.project.id", "cf-data-analytics")
+      // .config("spark.hadoop.google.cloud.auth.service.account.enable", "true")
+      // .config(
+      //   "spark.hadoop.google.cloud.auth.service.account.json.keyfile",
+      //   "/Users/chasf/Desktop/cf-data-analytics-1ff73e9e3f7a.json"
+      // )
       .getOrCreate()
 
-    spark.conf.set("temporaryGcsBucket", "cf-spark-temp")
-
     val df = spark.sqlContext
-      .range(0, 750000000)
+      .range(0, 1000000001)
 
     val df2 = df
       .withColumn("even_distribution", rand(seed = 10))
@@ -35,40 +43,12 @@ object BqDemo {
     //     .load()
     //     .cache())
 
-    // val df2 = df.limit(10).select("display_name")
-
-    // df2.show()
-
-    // print("total row count: " + df2.count())
-
     df2.printSchema()
-
-    // .option("writeMethod", "direct")
 
     df2.write
       .format("bigquery")
-      // .option("writeMethod", "direct")
-      .option(
-        "fs.gs.impl",
-        "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem"
-      )
-      .option(
-        "fs.AbstractFileSystem.gs.impl",
-        "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"
-      )
       .option("temporaryGcsBucket", "cf-spark-temp")
       .mode("overwrite")
       .save("cf-data-analytics.dataproc.distribution")
-
   }
 }
-
-// spark
-//   .read
-//   .option("fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem")
-//   .option("fs.AbstractFileSystem.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS")
-//   .option("google.cloud.auth.service.account.enable", "true")
-//   .option("google.cloud.auth.service.account.json.keyfile", "<path-to-json-keyfile.json>")
-//   .option("header", true)
-//   .csv("gs://<bucket>/<path-to-csv-file>")
-//   .show(10, false)
