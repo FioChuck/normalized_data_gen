@@ -15,6 +15,8 @@ object BqDemo {
       .config("spark.master", "local[*]")
       .getOrCreate()
 
+    spark.conf.set("temporaryGcsBucket", "cf-spark-temp")
+
     val df = spark.sqlContext
       .range(0, 750000000)
 
@@ -46,9 +48,27 @@ object BqDemo {
     df2.write
       .format("bigquery")
       // .option("writeMethod", "direct")
-      .option("temporaryGcsBucket", "gs://cf-spark-temp")
+      .option(
+        "fs.gs.impl",
+        "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem"
+      )
+      .option(
+        "fs.AbstractFileSystem.gs.impl",
+        "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"
+      )
+      .option("temporaryGcsBucket", "cf-spark-temp")
       .mode("overwrite")
       .save("cf-data-analytics.dataproc.distribution")
 
   }
 }
+
+// spark
+//   .read
+//   .option("fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem")
+//   .option("fs.AbstractFileSystem.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS")
+//   .option("google.cloud.auth.service.account.enable", "true")
+//   .option("google.cloud.auth.service.account.json.keyfile", "<path-to-json-keyfile.json>")
+//   .option("header", true)
+//   .csv("gs://<bucket>/<path-to-csv-file>")
+//   .show(10, false)
