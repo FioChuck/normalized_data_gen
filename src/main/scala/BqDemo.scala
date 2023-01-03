@@ -48,6 +48,7 @@ object BqDemo {
     df2.write
       .format("bigquery")
       .option("temporaryGcsBucket", "cf-spark-temp")
+      // .option("writeMethod", "direct")
       .mode("overwrite")
       .save("cf-data-analytics.dataproc.distribution")
   }
