@@ -10,8 +10,14 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-sql" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
-  "com.google.cloud.spark" %% "spark-bigquery-with-dependencies" % "0.27.1"
-  // "com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop3-2.2.6" % "provided"
+  "com.google.cloud.spark" %% "spark-bigquery-with-dependencies" % "0.27.1",
+  "com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop3-2.2.6"
+)
+
+assemblyShadeRules in assembly := Seq(
+  ShadeRule
+    .rename("com.google.common.**" -> "repackaged.com.google.common.@1")
+    .inAll
 )
 
 assemblyMergeStrategy in assembly := {
