@@ -10,9 +10,10 @@ import org.apache.spark.sql.functions._
 object BqDemo {
   def main(args: Array[String]): Unit = {
 
+    // TODO how to pass arguments in debug? Not possible with Metals?
     val spark = SparkSession.builder
       .appName("Bq Demo")
-      // .config("spark.master", "local[*]")
+      // .config("spark.master", "local[*]") // local dev
       // .config(
       //   "spark.hadoop.fs.AbstractFileSystem.gs.impl",
       //   "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"
@@ -26,15 +27,16 @@ object BqDemo {
       .getOrCreate()
 
     val df = spark.sqlContext
-      .range(0, 101)
+      .range(0, 1370462701) // define the number of mock data rows
 
     val df2 = df
       .withColumn("even_distribution", rand(seed = 10))
       .withColumn("normal_distribution", randn(seed = 10))
 
-    df2.describe().show()
+    df2.describe().show() // dataframe summary statistics
 
-    print("test")
+    df2.printSchema()
+    // read from bigquery example //
 
     // val df =
     //   (spark.read
@@ -43,13 +45,16 @@ object BqDemo {
     //     .load()
     //     .cache())
 
-    // df2.printSchema()
-
     df2.write
       .format("bigquery")
-      .option("temporaryGcsBucket", "cf-spark-temp")
+      .option(
+        "temporaryGcsBucket",
+        "cf-spark-temp"
+      ) // indirect mode destination gcs bucket
       // .option("writeMethod", "direct")
-      .mode("overwrite")
-      .save("cf-data-analytics.dataproc.distribution")
+      .mode("overwrite") // overwrite or append to destination table
+      .save(
+        "cf-data-analytics.dataproc.distribution"
+      ) // define destination table
   }
 }

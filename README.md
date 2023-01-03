@@ -2,13 +2,13 @@
 
 A simple Scala Spark application that generates random mock data with a normal distribution. The resulting data is written to BigQuery using the Apache Spark connector for Google BigQuery. See connector details [here](https://github.com/GoogleCloudDataproc/spark-bigquery-connector).
 
-This project can also be used as a template for building a Scala Spark CI/CD.
+This project can also be used as a template for building a Scala Spark CI/CD pipeline with SBT.
 
 # Setup
 
-This Scala project is designed to run as a standalone fat Jar. A yaml file in the `.github/workflows/` folder automates the assembly process using Github Actions and the [sbt](https://www.scala-sbt.org/) build tool _(compile and assemble uber Jar)_. SBT is a build tool for Scala/Java _(similar to Maven)_.
+This Scala project is designed to run as a standalone fat Jar. A yaml file in `.github/workflows/` automates the assembly process using Github Actions and the [sbt](https://www.scala-sbt.org/) build tool _(compile and assemble uber Jar)_. SBT is a build tool for Scala/Java _(similar to Maven)_.
 
-Github uses a Service Account Key to authenticate with GCP. The yaml script expects this value stored as Github repo secret _(listed below)_. Set this secret prior to deployment.
+Github uses a Service Account Key to authenticate with GCP _(when saving the updated jar to gcs)_. The yaml script expects this value stored as a Github repo secret _(listed below)_. Set this secret prior to deployment.
 
 | Action Secret | Value                                                          |
 | ------------- | -------------------------------------------------------------- |
@@ -16,9 +16,16 @@ Github uses a Service Account Key to authenticate with GCP. The yaml script expe
 
 > //TODO switch from Service Account Key JSON authentication to Workload Identity Federation https://github.com/google-github-actions/upload-cloud-storage#via-google-github-actionsauth
 
+# Random Data
+
+The random mock data is generated using Scala Spark Functions. Two different functions were used:
+
+1. [rand()](<https://spark.apache.org/docs/3.2.1/api/scala/org/apache/spark/sql/functions$.html#rand():org.apache.spark.sql.Column>) - Even distribution
+2. [randn()](<https://spark.apache.org/docs/3.2.1/api/scala/org/apache/spark/sql/functions$.html#rand():org.apache.spark.sql.Column>) - Normal distribution
+
 # Local Development
 
-When developing locally using [Metals](https://scalameta.org/metals/) or IntelliJ, credentials must be available to authentication with BigQuery. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the service account key json file path. More info [here](https://cloud.google.com/docs/authentication/application-default-credentials).
+When developing locally using [Metals](https://scalameta.org/metals/) or IntelliJ, credentials must be available to authenticate with BigQuery. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the service account key json file path. More info [here](https://cloud.google.com/docs/authentication/application-default-credentials).
 
 > //TODO switch credential configuration file to workload identity federation.
 
@@ -43,7 +50,7 @@ The `local[*]` configuration sets the worker threads equal to the logical cores 
 
 There are two options for writing data BigQuery using the Spark connector Direct Mode and Indirect Mode.
 
-Indirect more relies on the [GCS Spark Connector](https://github.com/GoogleCloudDataproc/hadoop-connectors/tree/master/gcs) which is NOT included with the connector. The Maven package for this connector is available here:
+Indirect relies on the [GCS Spark Connector](https://github.com/GoogleCloudDataproc/hadoop-connectors/tree/master/gcs) which is NOT included with the connector. The Maven package for this connector is available here:
 
 > > // https://mvnrepository.com/artifact/com.google.cloud.bigdataoss/gcs-connector
 > > libraryDependencies += "com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop3-2.2.10"
@@ -69,7 +76,7 @@ Several Spark settings are also required when using the GCS connector. Comment t
 
 # Reference
 
-This application was build using several articles as reference. These sources are listed below.
+This application was built using several articles as reference. These sources are listed below.
 
 ## GCS Actions
 
