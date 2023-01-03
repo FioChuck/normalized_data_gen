@@ -14,7 +14,7 @@ libraryDependencies ++= Seq(
   "com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop3-2.2.6"
 )
 
-assemblyMergeStrategy in assembly := {
-  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-  case x                             => MergeStrategy.first
-}
+// assemblyMergeStrategy in assembly := {
+//   case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+//   case x                             => MergeStrategy.first
+// }
