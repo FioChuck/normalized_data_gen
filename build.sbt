@@ -7,23 +7,23 @@ scalaVersion := "2.12.14"
 val sparkVersion = "3.1.3"
 
 libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-core" % sparkVersion,
-  "org.apache.spark" %% "spark-sql" % sparkVersion,
+  "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
+  "org.apache.spark" %% "spark-sql" % sparkVersion % "provided",
   "com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop3-2.2.6",
   "com.google.cloud.spark" %% "spark-bigquery-with-dependencies" % "0.27.1"
 )
 //% "provided"
 
-assemblyShadeRules in assembly := Seq(
-  ShadeRule
-    .rename("com.google.common.**" -> "repackaged.com.google.common.@1")
-    .inAll
-)
+// assemblyShadeRules in assembly := Seq(
+//   ShadeRule
+//     .rename("com.google.common.**" -> "repackaged.com.google.common.@1")
+//     .inAll
+// )
 
-assemblyMergeStrategy in assembly := {
-  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-  case x                             => MergeStrategy.first
-}
+// assemblyMergeStrategy in assembly := {
+//   case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+//   case x                             => MergeStrategy.first
+// }
 
 // assemblyMergeStrategy in assembly := {
 //   case PathList("org", "apache", xs @ _*) => MergeStrategy.last
