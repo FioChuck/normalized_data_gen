@@ -14,11 +14,11 @@ libraryDependencies ++= Seq(
 )
 //% "provided"
 
-// assemblyShadeRules in assembly := Seq(
-//   ShadeRule
-//     .rename("com.google.common.**" -> "repackaged.com.google.common.@1")
-//     .inAll
-// )
+assemblyShadeRules in assembly := Seq(
+  ShadeRule
+    .rename("com.google.cloud.**" -> "repackaged.com.google.cloud.@1")
+    .inAll
+)
 
 // assemblyMergeStrategy in assembly := {
 //   case PathList("META-INF", xs @ _*) => MergeStrategy.discard
