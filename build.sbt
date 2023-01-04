@@ -17,6 +17,8 @@ libraryDependencies ++= Seq(
 assemblyShadeRules in assembly := Seq(
   ShadeRule
     .rename("com.google.cloud.**" -> "repackaged.com.google.cloud.@1")
+    .inAll,
+  ShadeRule
     .rename("com.google.common.**" -> "repackaged.com.google.common.@1")
     .inAll
 )
