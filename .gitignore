@@ -5,6 +5,7 @@
 .bsp/
 .metals/
 .vscode
+.scalafmt.conf
 target/
 project/.bloop/
 project/project/

@@ -2,13 +2,15 @@
 
 A simple Scala Spark application that generates random mock data with a normal distribution. The resulting data is written to BigQuery using the Apache Spark connector for Google BigQuery. See connector details [here](https://github.com/GoogleCloudDataproc/spark-bigquery-connector).
 
-This project can also be used as a template for building a Scala Spark CI/CD pipeline with SBT.
+This project can also be used as a template for building a Scala Spark CI/CD pipeline with [sbt](https://www.scala-sbt.org/) _(Simple Build Tool)_ and Github Actions.
 
 # Setup
 
-This Scala project is designed to run as a standalone fat Jar. A yaml file in `.github/workflows/` automates the assembly process using Github Actions and the [sbt](https://www.scala-sbt.org/) build tool _(compile and assemble uber Jar)_. SBT is a build tool for Scala/Java _(similar to Maven)_.
+This Scala project is designed to run as a standalone fat Jar. A yaml file in `.github/workflows/` automates the assembly process using Github Actions and the [sbt](https://www.scala-sbt.org/) build tool _(compile and assemble uber Jar)_. Sbt is a build tool for Scala/Java _(similar to Maven)_.
 
-Github uses a Service Account Key to authenticate with GCP _(when saving the updated jar to gcs)_. The yaml script expects this value stored as a Github repo secret _(listed below)_. Set this secret prior to deployment.
+The compiled Uber Jar is then copied into Google Cloud Storage using [google-github-actions/upload-cloud-storage](https://github.com/google-github-actions/upload-cloud-storage).
+
+Github uses a Service Account Key to authenticate with GCP _(when copying the Jar to gcs)_. The yaml script expects this value stored as a Github repo secret _(listed below)_. Set this secret prior to deployment.
 
 | Action Secret | Value                                                          |
 | ------------- | -------------------------------------------------------------- |
@@ -16,9 +18,39 @@ Github uses a Service Account Key to authenticate with GCP _(when saving the upd
 
 > //TODO switch from Service Account Key JSON authentication to Workload Identity Federation https://github.com/google-github-actions/upload-cloud-storage#via-google-github-actionsauth
 
+Next a table is required in Google BigQuery as a destination for the mock data. Create a table with the following schema:
+
+```json
+[
+  {
+    "mode": "REQUIRED",
+    "name": "id",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "REQUIRED",
+    "name": "even_distribution",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "REQUIRED",
+    "name": "normal_distribution",
+    "type": "FLOAT"
+  }
+]
+```
+
+Finally the Dataproc job can be started using gcloud.
+
+_Ex:_
+
+```shell
+gcloud dataproc jobs wait job-aab3d442 --project cf-data-analytics --region us-central1
+```
+
 # Random Data
 
-The random mock data is generated using Scala Spark Functions. Two different functions were used:
+The random mock data is generated using Scala Spark Functions. Two different functions are used:
 
 1. [rand()](<https://spark.apache.org/docs/3.2.1/api/scala/org/apache/spark/sql/functions$.html#rand():org.apache.spark.sql.Column>) - Even distribution
 2. [randn()](<https://spark.apache.org/docs/3.2.1/api/scala/org/apache/spark/sql/functions$.html#rand():org.apache.spark.sql.Column>) - Normal distribution
@@ -48,14 +80,14 @@ _Ex:_
 
 The `local[*]` configuration sets the worker threads equal to the logical cores on your machine. More information [here](https://spark.apache.org/docs/latest/submitting-applications.html#master-urls).
 
-There are two options for writing data BigQuery using the Spark connector Direct Mode and Indirect Mode.
+There are two options for writing data BigQuery using the Spark connector, Direct Mode and Indirect Mode.
 
 Indirect relies on the [GCS Spark Connector](https://github.com/GoogleCloudDataproc/hadoop-connectors/tree/master/gcs) which is NOT included with the connector. The Maven package for this connector is available here:
 
 > > // https://mvnrepository.com/artifact/com.google.cloud.bigdataoss/gcs-connector
 > > libraryDependencies += "com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop3-2.2.10"
 
-Several Spark settings are also required when using the GCS connector. Comment these out before deploying to Dataproc _(see below)_. More information on these settings can be found [here](https://github.com/GoogleCloudDataproc/hadoop-connectors/tree/master/gcs).
+Several Spark settings are also required when using the GCS connector locally. Comment these out before deploying to Dataproc _(see below)_. More information on these settings can be found [here](https://github.com/GoogleCloudDataproc/hadoop-connectors/tree/master/gcs).
 
 ```scala
   val spark = SparkSession.builder
